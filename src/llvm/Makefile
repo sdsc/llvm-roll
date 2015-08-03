@@ -78,19 +78,21 @@ build: $(SRC_DIRS)
 	( \
 	  $(MODULE_LOAD_PYTHON); \
 	  cd $(SOURCE_DIR); \
-	  ./configure --prefix=$(ROOT)/$(PKGROOT); \
+	  ./configure --prefix=$(PKGROOT); \
 	  $(MAKE); \
 	)
 	@echo "::: Package $(NAME) build complete :::"
 	
 install::
-	mkdir -p $(ROOT)/$(PKGROOT)/example
+	$(PKGROOT_BIND_MOUNT)
+	mkdir -p $(PKGROOT)/example
 	( \
 	  $(MODULE_LOAD_PYTHON); \
-          cp test.c $(ROOT)/$(PKGROOT)/example; \
+          cp test.c $(PKGROOT)/example; \
 	  cd $(SOURCE_DIR); \
 	  $(MAKE) install \
 	)
+	$(PKGROOT_BIND_UMOUNT)
 	$(INSTALL_LICENSE_FILES)
 	@echo "::: Package $(NAME) install complete :::"
 
