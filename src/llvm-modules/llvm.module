@@ -1,0 +1,7 @@
+#%Module1.0
+module-whatis "llvm"
+module-whatis "Version: VERSION"
+module-whatis "Description: llvm"
+module-whatis "Compiler: ROLLCOMPILER"
+setenv LLVMHOME /opt/llvm
+prepend-path PATH /opt/llvm/bin
