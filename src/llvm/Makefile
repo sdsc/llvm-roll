@@ -84,8 +84,8 @@ build: $(SRC_DIRS)
 	@echo "::: Package $(NAME) build complete :::"
 	
 install::
+	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/example
 	$(PKGROOT_BIND_MOUNT)
-	mkdir -p $(PKGROOT)/example
 	( \
 	  $(MODULE_LOAD_PYTHON); \
           cp test.c $(PKGROOT)/example; \
