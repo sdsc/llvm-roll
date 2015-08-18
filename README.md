@@ -2,7 +2,7 @@
 
 ## Overview
 
-This roll bundles.. llvm
+This roll bundles llvm
 
 For more information about the various packages included in the llvm roll please visit their official web pages:
 
