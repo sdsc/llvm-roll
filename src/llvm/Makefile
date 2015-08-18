@@ -79,7 +79,7 @@ build: $(SRC_DIRS)
 	  $(MODULE_LOAD_PYTHON); \
 	  cd $(SOURCE_DIR); \
 	  ./configure --prefix=$(PKGROOT); \
-	  $(MAKE); \
+	  $(MAKE) -j 16; \
 	)
 	@echo "::: Package $(NAME) build complete :::"
 	
