@@ -24,6 +24,10 @@ Rocks development machine.
 The sdsc-roll must be installed on the build machine, since the build process
 depends on make include files provided by that roll.
 
+The roll sources assume that modulefiles provided by SDSC compiler and python
+rolls are available, but it will build without them as long as the environment
+variables they provide are otherwise defined.
+
 
 ## Building
 
@@ -38,6 +42,20 @@ A successful build will create the file `llvm-*.disk1.iso`.  If you built
 the roll on a Rocks frontend, proceed to the installation step. If you built the
 roll on a Rocks development appliance, you need to copy the roll to your Rocks
 frontend before continuing with installation.
+
+This roll source supports building with different compilers and for different
+Python versions.  The `ROLLCOMPILER` and `ROLLPY` make variables can be used to
+specify the names of compiler and Python modulefiles to use for building the
+software, e.g.,
+
+```shell
+make ROLLCOMPILER=intel ROLLPY=python 2>&1 | tee build.log
+```
+
+The build process recognizes "gnu", "intel" or "pgi" as the value for the
+`ROLLCOMPILER` variable; any Python modulefile name may be used as the value of
+the `ROLLPY` variable.  The default values are "gnu" and "python".
+
 
 ## Installation
 

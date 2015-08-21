@@ -69,8 +69,11 @@ endif
 include Rolls.mk
 
 default:
-	$(MAKE) roll
+	$(MAKE) ROLLCOMPILER="$(ROLLCOMPILER)" ROLLPY="$(ROLLPY)" roll
+
+clean::
+	rm -f _arch bootstrap.py
 
 distclean:: clean
-	-rm -f _arch build.log
-	-rm -rf RPMS SRPMS
+	rm -fr RPMS SRPMS
+	-rm -f build.log
