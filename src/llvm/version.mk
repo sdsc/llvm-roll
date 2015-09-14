@@ -1,6 +1,5 @@
-ifndef ROLLCOMPILER
-  ROLLCOMPILER = gnu
-endif
+# As of v3.6.2, llvm configure/build only works w/gnu compilers.
+override ROLLCOMPILER = gnu
 ifndef ROLLPY
   ROLLPY = python
 endif

@@ -57,19 +57,11 @@
 # $Log$
 #
 
-ifndef ROLLCOMPILER
-  ROLLCOMPILER = gnu
-endif
-
-ifndef ROLLPY
-  ROLLPY = python
-endif
-
 -include $(ROLLSROOT)/etc/Rolls.mk
 include Rolls.mk
 
 default:
-	$(MAKE) ROLLCOMPILER="$(ROLLCOMPILER)" ROLLPY="$(ROLLPY)" roll
+	$(MAKE) roll
 
 clean::
 	rm -f _arch bootstrap.py

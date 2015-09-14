@@ -43,21 +43,6 @@ the roll on a Rocks frontend, proceed to the installation step. If you built the
 roll on a Rocks development appliance, you need to copy the roll to your Rocks
 frontend before continuing with installation.
 
-This roll source supports building with different compilers and for different
-Python versions.  The `ROLLCOMPILER` and `ROLLPY` make variables can be used to
-specify the names of compiler and Python modulefiles to use for building the
-software, e.g.,
-
-```shell
-make ROLLCOMPILER=intel ROLLPY=python 2>&1 | tee build.log
-```
-
-The build process recognizes "gnu", "intel" or "pgi" as the value for the
-`ROLLCOMPILER` variable; any Python modulefile name may be used as the value of
-the `ROLLPY` variable.  The default values are "gnu" and "python".
-
-NOTE: this roll presently builds successfully only using the gnu compiler.
-
 
 ## Installation
 
