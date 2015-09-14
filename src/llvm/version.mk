@@ -8,7 +8,7 @@ COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 
 NAME           = sdsc-llvm
 VERSION        = 3.6.2
-RELEASE        = 1
+RELEASE        = 2
 PKGROOT        = /opt/llvm
 
 SRC_SUBDIR     = llvm
