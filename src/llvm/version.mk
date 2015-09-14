@@ -1,6 +1,5 @@
-ifndef ROLLCOMPILER
-  ROLLCOMPILER = gnu
-endif
+# As of v3.6.2, llvm configure/build only works w/gnu compilers.
+override ROLLCOMPILER = gnu
 ifndef ROLLPY
   ROLLPY = python
 endif
@@ -8,7 +7,7 @@ COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 
 NAME           = sdsc-llvm
 VERSION        = 3.6.2
-RELEASE        = 1
+RELEASE        = 2
 PKGROOT        = /opt/llvm
 
 SRC_SUBDIR     = llvm
