@@ -56,6 +56,8 @@ The build process recognizes "gnu", "intel" or "pgi" as the value for the
 `ROLLCOMPILER` variable; any Python modulefile name may be used as the value of
 the `ROLLPY` variable.  The default values are "gnu" and "python".
 
+NOTE: this roll presently builds successfully only using the gnu compiler.
+
 
 ## Installation
 

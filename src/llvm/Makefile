@@ -64,9 +64,9 @@ include $(SDSCDEVEL)/Rules.mk
 $(NAME).spec: DESCRIPTION LICENSE
 
 DESCRIPTION:
-	$(MODULE_LOAD_CC); \
 	( \
-          $(DESCRIBE_PYTHON); \
+	  $(DESCRIBE_CC); \
+	  $(DESCRIBE_PYTHON); \
 	  $(DESCRIBE_PKG); \
 	) > $@
 
@@ -76,7 +76,10 @@ LICENSE: $(SRC_DIRS)
 
 build: $(SRC_DIRS)
 	( \
+	  $(MODULE_LOAD_CC); \
 	  $(MODULE_LOAD_PYTHON); \
+	  export CC=$(CC); \
+	  export CXX=$(CXX); \
 	  cd $(SOURCE_DIR); \
 	  ./configure --prefix=$(PKGROOT); \
 	  $(MAKE) -j 16; \
@@ -87,8 +90,9 @@ install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/example
 	$(PKGROOT_BIND_MOUNT)
 	( \
+	  $(MODULE_LOAD_CC); \
 	  $(MODULE_LOAD_PYTHON); \
-          cp test.c $(PKGROOT)/example; \
+	  cp test.c $(PKGROOT)/example; \
 	  cd $(SOURCE_DIR); \
 	  $(MAKE) install \
 	)
