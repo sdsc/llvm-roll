@@ -64,6 +64,8 @@ include $(SDSCDEVEL)/Rules.mk
 $(NAME).spec: DESCRIPTION LICENSE
 
 DESCRIPTION:
+	$(MODULE_LOAD_CC); \
+	$(MODULE_LOAD_PYTHON); \
 	( \
 	  $(DESCRIBE_CC); \
 	  $(DESCRIBE_PYTHON); \

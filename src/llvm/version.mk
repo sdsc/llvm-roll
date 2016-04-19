@@ -1,13 +1,14 @@
 # As of v3.6.2, llvm configure/build only works w/gnu compilers.
 override ROLLCOMPILER = gnu
+COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
+
 ifndef ROLLPY
   ROLLPY = python
 endif
-COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 
 NAME           = sdsc-llvm
 VERSION        = 3.6.2
-RELEASE        = 2
+RELEASE        = 3
 PKGROOT        = /opt/llvm
 
 SRC_SUBDIR     = llvm
@@ -18,6 +19,6 @@ SOURCE_VERSION = $(VERSION)
 SOURCE_PKG     = $(SOURCE_NAME)-$(SOURCE_VERSION).src.$(SOURCE_SUFFIX)
 SOURCE_DIR     = $(SOURCE_NAME)-$(SOURCE_VERSION).src
 
-TAR_GZ_PKGS       = $(SOURCE_PKG)
+TAR_GZ_PKGS    = $(SOURCE_PKG)
 
 RPM.EXTRAS     = AutoReq:No
