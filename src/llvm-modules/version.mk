@@ -1,3 +1,7 @@
+# As of v3.6.2, llvm configure/build only works w/gnu compilers.
+override ROLLCOMPILER = gnu
+COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
+
 PACKAGE     = llvm
 CATEGORY    = applications
 
