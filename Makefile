@@ -60,8 +60,12 @@
 -include $(ROLLSROOT)/etc/Rolls.mk
 include Rolls.mk
 
+ifndef ROLLPY
+  ROLLPY = python
+endif
+
 default:
-	$(MAKE) roll
+	$(MAKE) ROLLPY="$(ROLLPY)" roll
 
 clean::
 	rm -f _arch bootstrap.py

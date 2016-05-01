@@ -65,5 +65,5 @@ default:
 
 copyright pkg rpm clean::
 	for i in $(SRCDIRS); do \
-	  (cd $$i && $(MAKE) $@) || exit 2; \
+	  (cd $$i && $(MAKE) ROLLPY="$(ROLLPY)" $@) || exit 2; \
 	done
