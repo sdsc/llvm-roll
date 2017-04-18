@@ -43,13 +43,16 @@ the roll on a Rocks frontend, proceed to the installation step. If you built the
 roll on a Rocks development appliance, you need to copy the roll to your Rocks
 frontend before continuing with installation.
 
-The roll supports specifying building with/for python versions other than
-the one included with the o/s.  To use this feature, specify a `ROLLPY` make
-variable that includes a space-delimited list of python modulefiles, e.g.,
+This roll source supports building for different python installations.  The
+`ROLLPY` make variable can be used to specify the name of the python modulefile
+to use for building the software, e.g.,
 
 ```shell
-% make ROLLPY=opt-python 2>&1 | tee build.log
+make ROLLPY=opt-python 2>&1 | tee build.log
 ```
+
+Any python modulefile name may be used as the value of the ROLLPY variable.
+The default value is "python".
 
 
 ## Installation
