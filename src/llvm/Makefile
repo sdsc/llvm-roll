@@ -78,12 +78,14 @@ LICENSE: $(SRC_DIRS)
 
 build: $(SRC_DIRS)
 	( \
+	  $(MODULE_LOAD_CMAKE); \
 	  $(MODULE_LOAD_CC); \
 	  $(MODULE_LOAD_PYTHON); \
 	  export CC=$(CC); \
 	  export CXX=$(CXX); \
-	  cd $(SOURCE_DIR); \
-	  ./configure --prefix=$(PKGROOT); \
+	  mkdir $(SOURCE_DIR)/build; \
+	  cd $(SOURCE_DIR)/build; \
+	  cmake -DCMAKE_INSTALL_PREFIX=$(PKGROOT) ..; \
 	  $(MAKE) -j 16; \
 	)
 	@echo "::: Package $(NAME) build complete :::"
@@ -95,7 +97,7 @@ install::
 	  $(MODULE_LOAD_CC); \
 	  $(MODULE_LOAD_PYTHON); \
 	  cp test.c $(PKGROOT)/example; \
-	  cd $(SOURCE_DIR); \
+	  cd $(SOURCE_DIR)/build; \
 	  $(MAKE) install \
 	)
 	$(PKGROOT_BIND_UMOUNT)

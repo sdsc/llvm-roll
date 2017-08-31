@@ -10,6 +10,8 @@
 #include <vector>
 using namespace llvm;
 
+static LLVMContext myContext;
+
 //===----------------------------------------------------------------------===//
 // Lexer
 //===----------------------------------------------------------------------===//
@@ -177,9 +179,9 @@ return TokPrec;
 }
 
 // Error* - These are little helper functions for error handling.
-ExprAST *Error(const char *Str) { fprintf(stderr, "Error: %s\n", Str);return 0;}
-PrototypeAST *ErrorP(const char *Str) { Error(Str); return 0; }
-FunctionAST *ErrorF(const char *Str) { Error(Str); return 0; }
+ExprAST *Errorx(const char *Str) { fprintf(stderr, "Error: %s\n", Str);return 0;}
+PrototypeAST *ErrorP(const char *Str) { Errorx(Str); return 0; }
+FunctionAST *ErrorF(const char *Str) { Errorx(Str); return 0; }
 
 static ExprAST *ParseExpression();
 
@@ -206,7 +208,7 @@ while (1) {
        if (CurTok == ')') break;
 
   if (CurTok != ',')
-          return Error("Expected ')' or ',' in argument list");
+          return Errorx("Expected ')' or ',' in argument list");
      getNextToken();
          }
 }
@@ -231,7 +233,7 @@ while (1) {
    if (!V) return 0;
      
        if (CurTok != ')')
-return Error("expected ')'");
+return Errorx("expected ')'");
   getNextToken();  // eat ).
     return V;
     }
@@ -242,7 +244,7 @@ return Error("expected ')'");
     ///   ::= parenexpr
     static ExprAST *ParsePrimary() {
       switch (CurTok) {
-        default: return Error("unknown token when expecting an expression");
+        default: return Errorx("unknown token when expecting an expression");
           case tok_identifier: return ParseIdentifierExpr();
  case tok_number:     return ParseNumberExpr();
    case '(':            return ParseParenExpr();
@@ -348,13 +350,13 @@ static PrototypeAST *ParseExtern() {
     //===----------------------------------------------------------------------===//
 
     static Module *TheModule;
-    static IRBuilder<> Builder(getGlobalContext());
+    static IRBuilder<> Builder(myContext);
     static std::map<std::string, Value*> NamedValues;
 
-    Value *ErrorV(const char *Str) { Error(Str); return 0; }
+    Value *ErrorV(const char *Str) { Errorx(Str); return 0; }
 
     Value *NumberExprAST::Codegen() {
-      return ConstantFP::get(getGlobalContext(), APFloat(Val));
+      return ConstantFP::get(myContext, APFloat(Val));
       }
 
       Value *VariableExprAST::Codegen() {
@@ -375,7 +377,7 @@ switch (Op) {
         case '<':
  L = Builder.CreateFCmpULT(L, R, "cmptmp");
      // Convert bool 0/1 to double 0.0 or 1.0
-   return Builder.CreateUIToFP(L, Type::getDoubleTy(getGlobalContext()),
+   return Builder.CreateUIToFP(L, Type::getDoubleTy(myContext),
   "booltmp");
     default: return ErrorV("invalid binary operator");
 }
@@ -403,8 +405,8 @@ std::vector<Value*> ArgsV;
      Function *PrototypeAST::Codegen() {
  // Make the function type:  double(double,double) etc.
    std::vector<Type*> Doubles(Args.size(),
-          Type::getDoubleTy(getGlobalContext()));
- FunctionType *FT = FunctionType::get(Type::getDoubleTy(getGlobalContext()),
+          Type::getDoubleTy(myContext));
+ FunctionType *FT = FunctionType::get(Type::getDoubleTy(myContext),
  Doubles, false);
    
      Function *F = Function::Create(FT, Function::ExternalLinkage, Name, TheModule);
@@ -436,7 +438,8 @@ std::vector<Value*> ArgsV;
        AI->setName(Args[Idx]);
 
     // Add arguments to variable symbol table.
-        NamedValues[Args[Idx]] = AI;
+        // Disabled: g++ rejects this assignment
+        // NamedValues[Args[Idx]] = AI;
           }
  
    return F;
@@ -450,7 +453,7 @@ std::vector<Value*> ArgsV;
          return 0;
 
   // Create a new basic block to start insertion into.
-    BasicBlock *BB = BasicBlock::Create(getGlobalContext(), "entry", TheFunction);
+    BasicBlock *BB = BasicBlock::Create(myContext, "entry", TheFunction);
       Builder.SetInsertPoint(BB);
         
           if (Value *RetVal = Body->Codegen()) {
@@ -539,7 +542,7 @@ return 0;
 //===----------------------------------------------------------------------===//
 
 int main() {
-  LLVMContext &Context = getGlobalContext();
+  LLVMContext &Context = myContext;
 
     // Install standard binary operators.
       // 1 is lowest precedence.
