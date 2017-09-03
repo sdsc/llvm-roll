@@ -61,6 +61,17 @@ include Rules.mk
 include $(SDSCDEVEL)/Pull.mk
 include $(SDSCDEVEL)/Rules.mk
 
+# NOTE: we split the package into multiple rpms because of rpm size limits. The
+# "make rpm" invocation of this Makefile creates the sdsc-llvm rpm and uses
+# recursive calls to create -llvm2, -llvm3, .. -llvm$(RPM_COUNT).  llvm files
+# are packaged round-robin from a sorted listing of the source package
+# contents--the first in sdsc-llvm, second in -llvm2, third in -llvm3, etc.
+
+RPM_COUNT = 8
+RPM_TO_BUILD = 1
+
+LLVM_CACHE = $(REDHAT.ROOT)/cache/build-llvm
+
 $(NAME).spec: DESCRIPTION LICENSE
 
 DESCRIPTION:
@@ -77,7 +88,9 @@ LICENSE: $(SRC_DIRS)
 	echo "Open Source" > $@
 
 build: $(SRC_DIRS)
-	( \
+	if test "$(RPM_TO_BUILD)" = "1"; then \
+	  /bin/mv $(CLANG_DIR) $(SOURCE_DIR)/tools/clang; \
+	  /bin/mv $(TOOLS_DIR) $(SOURCE_DIR)/tools/clang/tools/extra; \
 	  $(MODULE_LOAD_CMAKE); \
 	  $(MODULE_LOAD_CC); \
 	  $(MODULE_LOAD_PYTHON); \
@@ -87,21 +100,35 @@ build: $(SRC_DIRS)
 	  cd $(SOURCE_DIR)/build; \
 	  cmake -DCMAKE_INSTALL_PREFIX=$(PKGROOT) ..; \
 	  $(MAKE) -j 16; \
-	)
+	fi
 	@echo "::: Package $(NAME) build complete :::"
 	
 install::
-	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/example
-	$(PKGROOT_BIND_MOUNT)
-	( \
+	if test "$(RPM_TO_BUILD)" = "1"; then \
+	  mkdir -p -m 755 $(ROOT)/$(PKGROOT)/example; \
+	  $(PKGROOT_BIND_MOUNT); \
 	  $(MODULE_LOAD_CC); \
 	  $(MODULE_LOAD_PYTHON); \
 	  cp test.c $(PKGROOT)/example; \
 	  cd $(SOURCE_DIR)/build; \
-	  $(MAKE) install \
-	)
-	$(PKGROOT_BIND_UMOUNT)
-	$(INSTALL_LICENSE_FILES)
+	  $(MAKE) install; \
+	  $(PKGROOT_BIND_UMOUNT); \
+	  cd ../..; \
+	  $(INSTALL_LICENSE_FILES); \
+	  /bin/mkdir -p $(LLVM_CACHE); \
+	  /bin/mv $(ROOT)/$(PKGROOT)/* $(LLVM_CACHE)/; \
+	  for rpm in `seq 2 $(RPM_COUNT)`; do \
+	    $(MAKE) NAME=$(NAME)$$rpm RPM_TO_BUILD=$$rpm rpm; \
+	  done; \
+	fi
+	rm -fr $(ROOT)/$(PKGROOT)
+	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
+	cd $(LLVM_CACHE); \
+	echo === Copying mod $(RPM_TO_BUILD) from; \
+	/bin/ls -R .; \
+	find . -type f | sort | perl -e 'for(my $$i=0;<>;$$i++){chomp and `/bin/cp --parents "$$_" $(ROOT)/$(PKGROOT)/` if $$i%$(RPM_COUNT)+1 == $(RPM_TO_BUILD);}'
+	echo === PKGROOT contents after copy
+	/bin/ls -R $(ROOT)/$(PKGROOT)
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::
