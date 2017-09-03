@@ -63,11 +63,11 @@ include $(SDSCDEVEL)/Rules.mk
 
 # NOTE: we split the package into multiple rpms because of rpm size limits. The
 # "make rpm" invocation of this Makefile creates the sdsc-llvm rpm and uses
-# recursive calls to create -llvm2, -llvm3, .. -llvm$(RPM_COUNT).  llvm files
+# recursive calls to create -llvm_2, -llvm_3, .. -llvm_$(RPMS).  llvm files
 # are packaged round-robin from a sorted listing of the source package
-# contents--the first in sdsc-llvm, second in -llvm2, third in -llvm3, etc.
+# contents--the first in sdsc-llvm, second in -llvm_2, third in -llvm_3, etc.
 
-RPM_COUNT = 20
+RPMS = 20
 RPM_TO_BUILD = 1
 
 LLVM_CACHE = $(REDHAT.ROOT)/cache/build-llvm
@@ -118,8 +118,8 @@ install::
 	  $(INSTALL_LICENSE_FILES); \
 	  /bin/mkdir -p $(LLVM_CACHE); \
 	  /bin/mv $(ROOT)/$(PKGROOT)/* $(LLVM_CACHE)/; \
-	  for rpm in `seq 2 $(RPM_COUNT)`; do \
-	    $(MAKE) NAME=$(NAME)$$rpm RPM_TO_BUILD=$$rpm rpm; \
+	  for rpm in `seq 2 $(RPMS)`; do \
+	    $(MAKE) NAME=$(NAME)_$$rpm RPM_TO_BUILD=$$rpm rpm; \
 	  done; \
 	fi
 	rm -fr $(ROOT)/$(PKGROOT)
@@ -127,7 +127,7 @@ install::
 	cd $(LLVM_CACHE); \
 	echo === Copying mod $(RPM_TO_BUILD) from; \
 	/bin/ls -R .; \
-	find . -type f | sort | perl -e 'for(my $$i=0;<>;$$i++){chomp and `/bin/cp --parents "$$_" $(ROOT)/$(PKGROOT)/` if $$i%$(RPM_COUNT)+1 == $(RPM_TO_BUILD);}'
+	find . -type f | sort | perl -e 'for(my $$i=0;<>;$$i++){chomp and `/bin/cp --parents "$$_" $(ROOT)/$(PKGROOT)/` if $$i%$(RPMS)+1 == $(RPM_TO_BUILD);}'
 	echo === PKGROOT contents after copy
 	/bin/ls -R $(ROOT)/$(PKGROOT)
 	@echo "::: Package $(NAME) install complete :::"

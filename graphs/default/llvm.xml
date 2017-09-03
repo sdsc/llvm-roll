@@ -2,24 +2,27 @@
 
 <graph>
 
-	<description>
-	The llvm Roll - http://llvm.org
-	</description>
+<description>
+The llvm Roll - http://llvm.org
+</description>
 
-	<copyright>
-	Copyright (c) 2000 - 2014 The Regents of the University of California.
-	All rights reserved. Rocks(r) v6.1.1 www.rocksclusters.org
-	</copyright>
+<copyright>
+Copyright (c) 2000 - 2017 The Regents of the University of California.
+All rights reserved. Rocks(r) v6.2 www.rocksclusters.org
+</copyright>
 
-	<!-- add edges here -->
-	<edge from="base">
-		<to>llvm-base</to>
-	</edge>
+<edge from="compute">
+  <to>llvm-common</to>
+</edge>
+<order head="compute">
+  <tail>llvm-common</tail>
+</order>
 
-	<!-- enforce post section ordering -->
-	<!-- llvm-base post sections execute after base post sections -->
-	<order head="base">
-		<tail>llvm-base</tail>
-	</order>
+<edge from="login">
+  <to>llvm-common</to>
+</edge>
+<order head="login">
+  <tail>llvm-common</tail>
+</order>
 
 </graph>
