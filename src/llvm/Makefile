@@ -67,7 +67,7 @@ include $(SDSCDEVEL)/Rules.mk
 # are packaged round-robin from a sorted listing of the source package
 # contents--the first in sdsc-llvm, second in -llvm2, third in -llvm3, etc.
 
-RPM_COUNT = 8
+RPM_COUNT = 20
 RPM_TO_BUILD = 1
 
 LLVM_CACHE = $(REDHAT.ROOT)/cache/build-llvm
@@ -90,6 +90,7 @@ LICENSE: $(SRC_DIRS)
 build: $(SRC_DIRS)
 	if test "$(RPM_TO_BUILD)" = "1"; then \
 	  /bin/mv $(CLANG_DIR) $(SOURCE_DIR)/tools/clang; \
+	  /bin/mv $(LLDB_DIR) $(SOURCE_DIR)/tools/lldb; \
 	  /bin/mv $(TOOLS_DIR) $(SOURCE_DIR)/tools/clang/tools/extra; \
 	  $(MODULE_LOAD_CMAKE); \
 	  $(MODULE_LOAD_CC); \
