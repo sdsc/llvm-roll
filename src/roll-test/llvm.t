@@ -46,7 +46,7 @@ SKIP: {
 
   skip 'llvm not installed', 7 if ! $isInstalled;
 
-  $output = `module load llvm; clang -o $TESTFILE $TESTFILE.c 2>&1`;
+  $output = `module load llvm; clang-4.0 -o $TESTFILE $TESTFILE.c 2>&1`;
   ok($? == 0, 'clang C compiler works');
   $output = `module load llvm; ./$TESTFILE`;
   ok($? == 0, 'compiled C program runs');
@@ -55,11 +55,11 @@ SKIP: {
   $output = `bash $TESTFILE.sh 2>&1`;
   like($output, qr/ret double 9.000000e\+00/, 'llvm works');
 
-  `/bin/ls /opt/modulefiles/applications/llvm/[0-9]* 2>&1`;
+  `/bin/ls /opt/modulefiles/compilers/llvm/[0-9]* 2>&1`;
   ok($? == 0, 'llvm module installed');
-  `/bin/ls /opt/modulefiles/applications/llvm/.version.[0-9]* 2>&1`;
+  `/bin/ls /opt/modulefiles/compilers/llvm/.version.[0-9]* 2>&1`;
   ok($? == 0, 'llvm version module installed');
-  ok(-l '/opt/modulefiles/applications/llvm/.version',
+  ok(-l '/opt/modulefiles/compilers/llvm/.version',
      'llvm version module link created');
 
 }
