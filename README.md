@@ -57,21 +57,33 @@ The default value is "python".
 
 ## Installation
 
-To install, execute these instructions on a Rocks frontend:
+To install, first execute these instructions on a Rocks frontend:
 
 ```shell
 % rocks add roll *.iso
 % rocks enable roll llvm
 % cd /export/rocks/install
 % rocks create distro
-% rocks run roll llvm | bash
 ```
+
+Subsequent installs of compute and login nodes will then include the contents of
+the llvm-roll.
+
+To avoid cluttering the cluster frontend with unused software, the llvm-roll is
+configured to install only on compute and login nodes. To force installation on
+your frontend, run this command after adding the llvm-roll to your distro
+
+```shell
+% rocks run roll llvm host=NAME | bash
+```
+
+where NAME is the DNS name of a compute or login node in your cluster.
 
 In addition to the software itself, the roll installs llvm environment
 module files in:
 
 ```shell
-/opt/modulefiles/applications/llvm
+/opt/modulefiles/compilers/llvm
 ```
 
 

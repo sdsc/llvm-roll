@@ -12,6 +12,7 @@ All rights reserved. Rocks(r) v5.1 www.rocksclusters.org
 </copyright>
 
 <package>sdsc-llvm</package>
+<package>sdsc-llvm_RPM</package>
 <package>sdsc-llvm-modules</package>
 <package>sdsc-llvm-roll-test</package>
 

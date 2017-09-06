@@ -21,6 +21,16 @@ if($appliance =~ /$installedOnAppliancesPattern/) {
 }
 
 `mkdir $TESTFILE.dir`;
+
+open(OUT, ">$TESTFILE.c");
+print OUT <<END;
+#include <stdio.h>
+int main(int argc, char **argv) {
+  printf("Hello world\\n");
+  return 0;
+}
+END
+
 open(OUT, ">$TESTFILE.sh");
   print OUT <<END;
 module load llvm
@@ -31,16 +41,25 @@ g++ test.c `llvm-config --cxxflags --ldflags --libs core executionengine interpr
 4+5;
 EOF
 END
+
 SKIP: {
 
-  skip 'llvm not installed', 4 if ! $isInstalled;
+  skip 'llvm not installed', 7 if ! $isInstalled;
+
+  $output = `module load llvm; clang -o $TESTFILE $TESTFILE.c 2>&1`;
+  ok($? == 0, 'clang C compiler works');
+  $output = `module load llvm; ./$TESTFILE`;
+  ok($? == 0, 'compiled C program runs');
+  like($output, qr/Hello world/, 'compiled C program correct output');
+
   $output = `bash $TESTFILE.sh 2>&1`;
   like($output, qr/ret double 9.000000e\+00/, 'llvm works');
-  `/bin/ls /opt/modulefiles/applications/llvm/[0-9]* 2>&1`;
+
+  `/bin/ls /opt/modulefiles/compilers/llvm/[0-9]* 2>&1`;
   ok($? == 0, 'llvm module installed');
-  `/bin/ls /opt/modulefiles/applications/llvm/.version.[0-9]* 2>&1`;
+  `/bin/ls /opt/modulefiles/compilers/llvm/.version.[0-9]* 2>&1`;
   ok($? == 0, 'llvm version module installed');
-  ok(-l '/opt/modulefiles/applications/llvm/.version',
+  ok(-l '/opt/modulefiles/compilers/llvm/.version',
      'llvm version module link created');
 
 }

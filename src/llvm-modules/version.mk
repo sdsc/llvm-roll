@@ -3,10 +3,10 @@ override ROLLCOMPILER = gnu
 COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 
 PACKAGE     = llvm
-CATEGORY    = applications
+CATEGORY    = compilers
 
 NAME        = sdsc-$(PACKAGE)-modules
-RELEASE     = 4
+RELEASE     = 5
 PKGROOT     = /opt/modulefiles/$(CATEGORY)/$(PACKAGE)
 
 VERSION_SRC = $(REDHAT.ROOT)/src/$(PACKAGE)/version.mk

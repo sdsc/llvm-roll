@@ -64,12 +64,19 @@ ifndef ROLLPY
   ROLLPY = python
 endif
 
+RPMS = 20
+
 default:
-	$(MAKE) ROLLPY="$(ROLLPY)" roll
+	cp nodes/llvm-common.xml.in nodes/llvm-common.xml
+	for rpm in `seq 2 $(RPMS)`; do \
+          perl -pi -e 'print and s/RPM/'$${rpm}'/g if m/RPM/' nodes/llvm-common.xml; \
+        done; \
+        perl -pi -e '$$_ = "" if m/RPM/' nodes/llvm-common.xml; \
+	$(MAKE) RPMS=$(RPMS) ROLLPY="$(ROLLPY)" roll
 
 clean::
 	rm -f _arch bootstrap.py
 
 distclean:: clean
-	rm -fr RPMS SRPMS
+	rm -fr RPMS SRPMS cache
 	-rm -f build.log
