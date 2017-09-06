@@ -125,11 +125,11 @@ install::
 	rm -fr $(ROOT)/$(PKGROOT)
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
 	cd $(LLVM_CACHE); \
-	echo === Copying mod $(RPM_TO_BUILD) from; \
-	/bin/ls -R .; \
 	find . -type f | sort | perl -e 'for(my $$i=0;<>;$$i++){chomp and `/bin/cp --parents "$$_" $(ROOT)/$(PKGROOT)/` if $$i%$(RPMS)+1 == $(RPM_TO_BUILD);}'
-	echo === PKGROOT contents after copy
-	/bin/ls -R $(ROOT)/$(PKGROOT)
+	versionedCompiler=`/bin/ls $(ROOT)/$(PKGROOT)/bin | /bin/grep '^clang-[0-9].*'`; \
+	if test -n "$$versionedCompiler"; then \
+	  /bin/ln -s $$versionedCompiler $(ROOT)/$(PKGROOT)/bin/clang; \
+	fi
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::

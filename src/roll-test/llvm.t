@@ -46,7 +46,7 @@ SKIP: {
 
   skip 'llvm not installed', 7 if ! $isInstalled;
 
-  $output = `module load llvm; clang-4.0 -o $TESTFILE $TESTFILE.c 2>&1`;
+  $output = `module load llvm; clang -o $TESTFILE $TESTFILE.c 2>&1`;
   ok($? == 0, 'clang C compiler works');
   $output = `module load llvm; ./$TESTFILE`;
   ok($? == 0, 'compiled C program runs');
