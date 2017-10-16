@@ -54,6 +54,15 @@ make ROLLPY=opt-python 2>&1 | tee build.log
 Any python modulefile name may be used as the value of the ROLLPY variable.
 The default value is "python".
 
+Since debugger support significantly increases the size of the llvm
+installation, the llvm-roll may be built with or without lldb. The debbugger is
+included by default; to suppress building it, include ROLLOPTS=lldb=no with
+the make command:
+
+```shell
+make ROLOPTS=lldb=no 2>&1 | tee build.log
+```
+
 
 ## Installation
 

@@ -6,9 +6,15 @@ ifndef ROLLPY
   ROLLPY = python
 endif
 
+ifndef RPMS
+  RPMS = 20
+endif
+
+BUILD_LLDB = $(subst lldb=,,$(lastword $(filter lldb=%,$(ROLLOPTS))))
+
 NAME           = sdsc-llvm
 VERSION        = 4.0.1
-RELEASE        = 1
+RELEASE        = 2
 PKGROOT        = /opt/llvm
 
 SRC_SUBDIR     = llvm
@@ -40,3 +46,4 @@ TOOLS_DIR      = $(TOOLS_NAME)-$(TOOLS_VERSION).src
 TAR_XZ_PKGS    = $(SOURCE_PKG) $(CLANG_PKG) $(LLDB_PKG) $(TOOLS_PKG)
 
 RPM.EXTRAS     = AutoReq:No
+RPM.PREFIX     = $(PKGROOT)
