@@ -10,6 +10,7 @@ ifndef RPMS
   RPMS = 20
 endif
 
+BUILD_CLANG = $(subst clang=,,$(lastword $(filter clang=%,$(ROLLOPTS))))
 BUILD_LLDB = $(subst lldb=,,$(lastword $(filter lldb=%,$(ROLLOPTS))))
 
 NAME           = sdsc-llvm

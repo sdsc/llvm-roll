@@ -66,6 +66,9 @@ include $(SDSCDEVEL)/Rules.mk
 # llvm files are packaged round-robin from a sorted listing of the source
 # package contents--the 1st in sdsc-llvm, 2nd in -llvm_2, 3rd in -llvm_3, etc.
 
+# NOTE: The llvm test files libbogus\*.a, used to test the linker's response
+# to errors, cause problems during packaging and so are deleted.
+
 RPM_TO_BUILD = 1
 
 LLVM_CACHE = $(REDHAT.ROOT)/cache/build-llvm
@@ -86,12 +89,19 @@ LICENSE: $(SRC_DIRS)
 	echo "Open Source" > $@
 
 build: $(SRC_DIRS)
+	rm -f $(CLANG_PKG) $(LLDB_PKG) $(SOURCE_PKG) $(TOOLS_PKG)
 	if test "$(RPM_TO_BUILD)" = "1"; then \
-	  mv $(CLANG_DIR) $(SOURCE_DIR)/tools/clang; \
-	  if test "$(BUILD_LLDB)" != "no"; then \
-	    mv $(LLDB_DIR) $(SOURCE_DIR)/tools/lldb; \
+	  if test "$(BUILD_CLANG)" != "no"; then \
+	    mv $(CLANG_DIR) $(SOURCE_DIR)/tools/clang; \
+	    mv $(TOOLS_DIR) $(SOURCE_DIR)/tools/clang/tools/extra; \
+	    if test "$(BUILD_LLDB)" != "no"; then \
+	      mv $(LLDB_DIR) $(SOURCE_DIR)/tools/lldb; \
+	    else \
+	      rm -fr $(LLDB_DIR); \
+	    fi; \
+	  else \
+	    rm -fr $(CLANG_DIR) $(LLDB_DIR) $(TOOLS_DIR); \
 	  fi; \
-	  mv $(TOOLS_DIR) $(SOURCE_DIR)/tools/clang/tools/extra; \
 	  $(MODULE_LOAD_CMAKE); \
 	  $(MODULE_LOAD_CC); \
 	  $(MODULE_LOAD_PYTHON); \
@@ -102,25 +112,25 @@ build: $(SRC_DIRS)
 	  cmake -DCMAKE_INSTALL_PREFIX=$(PKGROOT) ..; \
 	  $(MAKE); \
 	else \
-	  rm -fr $(CLANG_DIR) $(LLDB_DIR) $(TOOLS_DIR) $(CLANG_PKG) $(LLDB_PKG) $(TOOLS_PKG); \
+	  rm -fr $(CLANG_DIR) $(LLDB_DIR) $(SOURCE_DIR) $(TOOLS_DIR); \
 	fi
 	@echo "::: Package $(NAME) build complete :::"
 	
 install::
 	if test "$(RPM_TO_BUILD)" = "1"; then \
-	  mkdir -p -m 755 $(ROOT)/$(PKGROOT)/example; \
 	  $(PKGROOT_BIND_MOUNT); \
 	  $(MODULE_LOAD_CC); \
 	  $(MODULE_LOAD_PYTHON); \
-	  cp test.c $(PKGROOT)/example; \
 	  cd $(SOURCE_DIR)/build; \
 	  $(MAKE) install; \
 	  $(PKGROOT_BIND_UMOUNT); \
 	  cd ../..; \
 	  $(INSTALL_LICENSE_FILES); \
-	  mkdir -p $(LLVM_CACHE); \
-	  mv $(ROOT)/$(PKGROOT)/* $(LLVM_CACHE)/; \
-	  rmdir $(ROOT)/$(PKGROOT); \
+	  mkdir -m 755 $(ROOT)/$(PKGROOT)/example; \
+	  cp test.c $(ROOT)/$(PKGROOT)/example/; \
+	  rm -fr $(LLVM_CACHE) || true; \
+	  mv $(ROOT)/$(PKGROOT) $(LLVM_CACHE); \
+	  rm -f `find $(LLVM_CACHE) -name libbogus\*`; \
 	  for rpm in `seq 2 $(RPMS)`; do \
 	    $(MAKE) NAME=$(NAME)_$$rpm RPM_TO_BUILD=$$rpm rpm; \
 	  done; \
