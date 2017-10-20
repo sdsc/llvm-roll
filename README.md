@@ -54,6 +54,21 @@ make ROLLPY=opt-python 2>&1 | tee build.log
 Any python modulefile name may be used as the value of the ROLLPY variable.
 The default value is "python".
 
+By default the roll builds and bundles the clang front end with llvm. To
+build only llvm, specify a ROLLOPTS make var value of clang=no:
+
+```shell
+make ROLOPTS=clang=no 2>&1 | tee build.log
+```
+
+Including debugger support with clang significantly increases the size of the
+llvm installation. The llvm-roll may be built with clang, but without lldb, by
+specifying a ROLLOPTS make var value of lldb=no:
+
+```shell
+make ROLOPTS=lldb=no 2>&1 | tee build.log
+```
+
 
 ## Installation
 

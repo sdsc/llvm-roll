@@ -46,11 +46,14 @@ SKIP: {
 
   skip 'llvm not installed', 7 if ! $isInstalled;
 
-  $output = `module load llvm; clang -o $TESTFILE $TESTFILE.c 2>&1`;
-  ok($? == 0, 'clang C compiler works');
-  $output = `module load llvm; ./$TESTFILE`;
-  ok($? == 0, 'compiled C program runs');
-  like($output, qr/Hello world/, 'compiled C program correct output');
+  SKIP: {
+    skip 'clang not installed', 3 if ! -f '/opt/llvm/bin/clang';
+    $output = `module load llvm; clang -o $TESTFILE $TESTFILE.c 2>&1`;
+    ok($? == 0, 'clang C compiler works');
+    $output = `module load llvm; ./$TESTFILE`;
+    ok($? == 0, 'compiled C program runs');
+    like($output, qr/Hello world/, 'compiled C program correct output');
+  }
 
   $output = `bash $TESTFILE.sh 2>&1`;
   like($output, qr/ret double 9.000000e\+00/, 'llvm works');
