@@ -15,7 +15,7 @@ BUILD_LLDB = $(subst lldb=,,$(lastword $(filter lldb=%,$(ROLLOPTS))))
 
 NAME           = sdsc-llvm
 VERSION        = 4.0.1
-RELEASE        = 3
+RELEASE        = 4
 PKGROOT        = /opt/llvm
 
 SRC_SUBDIR     = llvm

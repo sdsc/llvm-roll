@@ -118,7 +118,7 @@ build: $(SRC_DIRS)
 	
 install::
 	if test "$(RPM_TO_BUILD)" = "1"; then \
-	  mkdir -p -m 755 $(ROOT)/$(PKGROOT)
+	  mkdir -p -m 755 $(ROOT)/$(PKGROOT); \
 	  $(PKGROOT_BIND_MOUNT); \
 	  $(MODULE_LOAD_CC); \
 	  $(MODULE_LOAD_PYTHON); \
