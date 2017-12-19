@@ -130,7 +130,8 @@ install::
 	  mkdir -m 755 $(ROOT)/$(PKGROOT)/example; \
 	  cp test.c $(ROOT)/$(PKGROOT)/example/; \
 	  rm -fr $(LLVM_CACHE) || true; \
-	  mv $(ROOT)/$(PKGROOT) $(LLVM_CACHE); \
+	  mkdir -p -m 755 $(LLVM_CACHE); \
+	  mv $(ROOT)/$(PKGROOT)/* $(LLVM_CACHE)/; \
 	  rm -f `find $(LLVM_CACHE) -name libbogus\*`; \
 	  for rpm in `seq 2 $(RPMS)`; do \
 	    $(MAKE) NAME=$(NAME)_$$rpm RPM_TO_BUILD=$$rpm rpm; \
