@@ -1,4 +1,5 @@
-# As of v3.6.2, llvm configure/build only works w/gnu compilers.
+# Intel compilers through 2018 all flag the llvm source code's STL usage as
+# syntax errors. Gnu works.
 override ROLLCOMPILER = gnu
 COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 
