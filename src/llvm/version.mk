@@ -15,7 +15,7 @@ BUILD_CLANG = $(subst clang=,,$(lastword $(filter clang=%,$(ROLLOPTS))))
 BUILD_LLDB = $(subst lldb=,,$(lastword $(filter lldb=%,$(ROLLOPTS))))
 
 NAME           = sdsc-llvm
-VERSION        = 6.0.0
+VERSION        = 6.0.1
 RELEASE        = 0
 PKGROOT        = /opt/llvm
 
