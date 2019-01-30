@@ -15,8 +15,8 @@ BUILD_CLANG = $(subst clang=,,$(lastword $(filter clang=%,$(ROLLOPTS))))
 BUILD_LLDB = $(subst lldb=,,$(lastword $(filter lldb=%,$(ROLLOPTS))))
 
 NAME           = sdsc-llvm
-VERSION        = 4.0.1
-RELEASE        = 6
+VERSION        = 7.0.1
+RELEASE        = 0
 PKGROOT        = /opt/llvm
 
 SRC_SUBDIR     = llvm
@@ -47,5 +47,5 @@ TOOLS_DIR      = $(TOOLS_NAME)-$(TOOLS_VERSION).src
 
 TAR_XZ_PKGS    = $(SOURCE_PKG) $(CLANG_PKG) $(LLDB_PKG) $(TOOLS_PKG)
 
-RPM.EXTRAS     = AutoReq:No\n%global __strip `which strip`
+RPM.EXTRAS     = AutoReq:No\n%global __strip `which strip`\n%global _python_bytecompile_errors_terminate_build 0
 RPM.PREFIX     = $(PKGROOT)

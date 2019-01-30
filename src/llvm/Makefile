@@ -110,7 +110,7 @@ build: $(SRC_DIRS)
 	  mkdir $(SOURCE_DIR)/build; \
 	  cd $(SOURCE_DIR)/build; \
 	  cmake -DCMAKE_INSTALL_PREFIX=$(PKGROOT) ..; \
-	  $(MAKE); \
+	  $(MAKE) -j 16; \
 	else \
 	  rm -fr $(CLANG_DIR) $(LLDB_DIR) $(SOURCE_DIR) $(TOOLS_DIR); \
 	fi
