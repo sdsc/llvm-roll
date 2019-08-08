@@ -70,9 +70,7 @@ endif
 # NOTE: we split the llvm package into multiple rpms because of rpm size limits.
 RPMS = 20
 ifeq (no, $(subst clang=,,$(lastword $(filter clang=%,$(ROLLOPTS)))))
-  RPMS = 4
-else ifeq (no, $(subst lldb=,,$(lastword $(filter lldb=%,$(ROLLOPTS)))))
-  RPMS = 10
+  RPMS = 8
 endif
 
 default:
